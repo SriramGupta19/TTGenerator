@@ -306,7 +306,7 @@ document.getElementById('download-btn').addEventListener('click', () => {
 
     // Use autoTable to render the table with background colors
     doc.autoTable({
-        head: [['Day', '08:00 - 08:50', '09:00 - 09:50', '10:00 - 10:50', '11:00 - 11:50', '12:00 - 12:50', '01:00 - 01:50', '02:00 - 02:50', '03:00 - 03:50', '04:00 - 04:50', '05:00 - 05:50']],
+        head: [['Day', '08:00-08:50', '09:00-09:50', '10:00-10:50', '11:00-11:50', '12:00-12:50', '13:00-13:50', '14:00-14:50', '15:00-15:50', '16:00-16:50', '17:00-17:50']],
         body: tableData.map(row => row.map(cell => {
             // Ensure that the first column (Day) is plain text and other columns are objects
             return typeof cell === 'object' ? { content: cell.content, styles: cell.styles || {} } : cell;
