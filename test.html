@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Timetable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        table {
+            width: 1000px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            height: 600px; /* Adjust to your desired height */
+            overflow-y: auto; /* For vertical scrolling */
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            text-align: center;
+            padding: 10px;
+            height: 50px;
+        }
+        th {
+            background-color: #f9f9f9;
+        }
+        .draggable {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: grab;
+            margin-bottom: 10px;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        #courses {
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* 5 columns */
+            gap: 20px; /* Space between items */
+        }
+        #download-btn, #undo-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        #download-btn:hover, #undo-btn:hover {
+            background-color: #45a049;
+        }
+        .slot-label {
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>University Timetable Generator</h1>
+        <div id="courses">
+            <div class="draggable" draggable="true" data-slot="E1" data-color="#FFFAF0">IDC E1 DB105</div>
+            <div class="draggable" draggable="true" data-slot="E1+" data-color="#FFFAF0">IDC E1+ DB105</div>
+            <div class="draggable" draggable="true" data-slot="H" data-color="#B0E0E6">II H DB309</div>
+            <div class="draggable" draggable="true" data-slot="B1" data-color="#F0E68C">REIC B1 DB105</div>
+            <div class="draggable" draggable="true" data-slot="B1+" data-color="#F0E68C">REIC B1+ DB105</div>
+            <div class="draggable" draggable="true" data-slot="C1" data-color="#98FB98">PCA C1 ELHC303</div>
+            <div class="draggable" draggable="true" data-slot="C1+" data-color="#98FB98">PCA C1+ ELHC303</div>
+            <div class="draggable" draggable="true" data-slot="G" data-color="#E6E6FA">RSA G DB308</div>
+            <div class="draggable" draggable="true" data-slot="A1" data-color="#FFB6C1">SSA A1 ELHC303</div>
+            <div class="draggable" draggable="true" data-slot="A1+" data-color="#FFB6C1">SSA A1+ ELHC303</div>
+            <div class="draggable" draggable="true" data-slot="F" data-color="#D8F0D1">DSMA F DB108</div>
+            <div class="draggable" draggable="true" data-slot="F+" data-color="#D8F0D1">DSMA F+ DB108</div>
+            <div class="draggable" draggable="true" data-slot="R1" data-color="#D3D3D3">IP Lab 2 R1</div>
+            <div class="draggable" draggable="true" data-slot="Q1" data-color="#E0FFFF">Project Q1</div>
+            <div class="draggable" draggable="true" data-slot="G" data-color="#FAFAD2">AICT G DB309</div>
+            <div class="draggable" draggable="true" data-slot="C1" data-color="#FFDEAD">DCTD C1 DB301</div>
+            <div class="draggable" draggable="true" data-slot="C1+" data-color="#FFDEAD">DCTD C1+ DB301</div>
+            <div class="draggable" draggable="true" data-slot="D1" data-color="#B0E57C">ORC D1 DB301</div>
+            <div class="draggable" draggable="true" data-slot="D1+" data-color="#B0E57C">ORC D1+ DB301</div>
+            <div class="draggable" draggable="true" data-slot="D1" data-color="#D8BFD8">SMPC D1 DB301</div>
+            <div class="draggable" draggable="true" data-slot="D1+" data-color="#D8BFD8">SMPC D1+ DB301</div>
+            <div class="draggable" draggable="true" data-slot="G" data-color="#F5FFFA">HEV G DB108</div>
+            <div class="draggable" draggable="true" data-slot="D1" data-color="#FFEC8B">EVSEP D1 DB105</div>
+            <div class="draggable" draggable="true" data-slot="D1+" data-color="#FFEC8B">EVSEP D1+ DB105</div>
+            <div class="draggable" draggable="true" data-slot="A1" data-color="#FFB6C1">EVCIA A1 DB309</div>
+            <div class="draggable" draggable="true" data-slot="A1+" data-color="#FFB6C1">EVCIA A1+ DB309</div>
+
+
+        </div>
+        
+        <table id="timetable">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>08.00-08.50</th>
+                    <th>09.00-09.50</th>
+                    <th>10.00-10.50</th>
+                    <th>11.00-11.50</th>
+                    <th>12.00-12.50</th>
+                    <th>01.00-01.50</th>
+                    <th>02.00-02.50</th>
+                    <th>03.00-03.50</th>
+                    <th>04.00-04.50</th>
+                    <th>05.00-05.50</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>MON</td>
+                    <td><div class="slot-label">F</div></td>
+                    <td><div class="slot-label">A1</div></td>
+                    <td><div class="slot-label">B1</div></td>
+                    <td><div class="slot-label">C1</div></td>
+                    <td><div class="slot-label">D1 +</div></td>
+                    <td><div class="slot-label">Lunch</div></td>
+                    <td><div class="slot-label">P1</div></td>
+                    <td><div class="slot-label">P1</div></td>
+                    <td><div class="slot-label">P1</div></td>
+                    <td><div class="slot-label">G</div></td>
+                </tr>
+                <tr>
+                    <td>TUE</td>
+                    <td><div class="slot-label">H</div></td>
+                    <td><div class="slot-label">B1</div></td>
+                    <td><div class="slot-label">C1</div></td>
+                    <td><div class="slot-label">D1</div></td>
+                    <td><div class="slot-label">E1 +</div></td>
+                    <td><div class="slot-label">Lunch</div></td>
+                    <td><div class="slot-label">Q1</div></td>
+                    <td><div class="slot-label">Q1</div></td>
+                    <td><div class="slot-label">Q1</div></td>
+                    <td><div class="slot-label">F</div></td>
+                </tr>
+                <tr>
+                    <td>WED</td>
+                    <td><div class="slot-label">G</div></td>
+                    <td><div class="slot-label">C1</div></td>
+                    <td><div class="slot-label">D1</div></td>
+                    <td><div class="slot-label">E1</div></td>
+                    <td><div class="slot-label">A1 +</div></td>
+                    <td><div class="slot-label">Lunch</div></td>
+                    <td><div class="slot-label">R1</div></td>
+                    <td><div class="slot-label">R1</div></td>
+                    <td><div class="slot-label">R1</div></td>
+                    <td><div class="slot-label">H</div></td>
+                </tr>
+                <tr>
+                    <td>THU</td>
+                    <td><div class="slot-label">F</div></td>
+                    <td><div class="slot-label">D1</div></td>
+                    <td><div class="slot-label">E1</div></td>
+                    <td><div class="slot-label">A1</div></td>
+                    <td><div class="slot-label">B1 +</div></td>
+                    <td><div class="slot-label">Lunch</div></td>
+                    <td><div class="slot-label">S1</div></td>
+                    <td><div class="slot-label">S1</div></td>
+                    <td><div class="slot-label">S1</div></td>
+                    <td><div class="slot-label">G</div></td>
+                </tr>
+                <tr>
+                    <td>FRI</td>
+                    <td><div class="slot-label">H</div></td>
+                    <td><div class="slot-label">E1</div></td>
+                    <td><div class="slot-label">A1</div></td>
+                    <td><div class="slot-label">B1</div></td>
+                    <td><div class="slot-label">C1 +</div></td>
+                    <td><div class="slot-label">Lunch</div></td>
+                    <td><div class="slot-label">T1</div></td>
+                    <td><div class="slot-label">T1</div></td>
+                    <td><div class="slot-label">T1</div></td>
+                    <td><div class="slot-label">F+</div></td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="download-btn">Download as PDF</button>
+        <button id="undo-btn">Undo</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        const courses = document.querySelectorAll('.draggable');
+        const cells = document.querySelectorAll('td');
+        let previousStates = []; // Array to store the previous state of affected cells
+
+        // Function to save the current state of a cell (content and background color)
+        function saveCellState(cell) {
+            const slotLabel = cell.querySelector('.slot-label');
+            if (slotLabel) {
+                return { content: slotLabel.innerText, color: slotLabel.style.backgroundColor };
+            }
+            return { content: '', color: null };
+        }
+
+        // Drag and drop functionality
+        courses.forEach(course => {
+            course.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text', e.target.innerText);
+                e.dataTransfer.setData('slot', e.target.dataset.slot);
+                e.dataTransfer.setData('color', e.target.dataset.color);  // Store color
+            });
+        });
+
+        cells.forEach(cell => {
+            const slotLabel = cell.querySelector('.slot-label');
+            if (!slotLabel) return;
+
+            cell.addEventListener('dragover', e => {
+                e.preventDefault();
+            });
+
+            cell.addEventListener('drop', e => {
+                e.preventDefault();
+                
+                // Save the previous state of all similar slots
+                const courseName = e.dataTransfer.getData('text');
+                const courseSlot = e.dataTransfer.getData('slot');
+                const courseColor = e.dataTransfer.getData('color');  // Get color
+
+                // Find all similar slots and save their current state
+                const similarSlots = Array.from(document.querySelectorAll('td .slot-label'))
+                                          .filter(label => label.innerText === courseSlot);
+
+                const similarStates = similarSlots.map(label => {
+                    const cell = label.closest('td');
+                    return { cell, state: saveCellState(cell) };
+                });
+
+                // Push the states of all similar slots into previousStates
+                previousStates.push(similarStates);
+
+                // Update all similar slots
+                similarSlots.forEach(label => {
+                    label.innerText = courseName;
+                    label.style.backgroundColor = courseColor;  // Apply color
+                });
+            });
+        });
+
+        // Undo functionality
+        document.getElementById('undo-btn').addEventListener('click', () => {
+            if (previousStates.length === 0) {
+                alert('No action to undo');
+                return;
+            }
+
+            // Get the last action and revert all similar slots
+            const lastAction = previousStates.pop();
+
+            // Revert all affected cells
+            lastAction.forEach(({ cell, state }) => {
+                const slotLabel = cell.querySelector('.slot-label');
+                if (slotLabel) {
+                    slotLabel.innerText = state.content;
+                    slotLabel.style.backgroundColor = state.color;
+                }
+            });
+        });
+
+        // Download timetable as PDF
+        // Download timetable as PDF
+document.getElementById('download-btn').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape');
+
+    // Prepare the data for the table including background colors
+    const tableData = [];
+    const rows = document.querySelectorAll('#timetable tbody tr');
+    rows.forEach(row => {
+        const rowData = [];
+        const cells = row.querySelectorAll('td');
+        
+        // Add the day (MON, TUE, etc.) as the first cell
+        rowData.push(cells[0].innerText); // This will push the day name into the row
+
+        // Add the rest of the cells (course names) along with their background color
+        cells.forEach((cell, index) => {
+            if (index > 0) { // Skip the first cell (Day column)
+                const slotLabel = cell.querySelector('.slot-label');
+                if (slotLabel) {
+                    const bgColor = slotLabel.style.backgroundColor;
+                    rowData.push({ content: slotLabel.innerText, styles: { fillColor: bgColor || null } });
+                } else {
+                    rowData.push({ content: '', styles: { fillColor: null } });
+                }
+            }
+        });
+
+        tableData.push(rowData);
+    });
+
+    // Use autoTable to render the table with background colors
+    doc.autoTable({
+        head: [['Day', '08.00-08.50', '09.00-09.50', '10.00-10.50', '11.00-11.50', '12.00-12.50', '01.00-01.50', '02.00-02.50', '03.00-03.50', '04.00-04.50', '05.00-05.50']],
+        body: tableData.map(row => row.map(cell => {
+            // Ensure that the first column (Day) is plain text and other columns are objects
+            return typeof cell === 'object' ? { content: cell.content, styles: cell.styles || {} } : cell;
+        })),
+        styles: { cellPadding: 3, border: '1px solid black' },
+        theme: 'grid',
+        headStyles: { fillColor: [270, 270, 240] },
+        startY: 10,  // Start rendering below the top margin
+    });
+
+    doc.save('timetable_landscape.pdf');
+});
+
+    </script>
+</body>
+</html>
